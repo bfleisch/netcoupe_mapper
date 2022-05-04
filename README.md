@@ -9,7 +9,7 @@ Create an interactive map with traces from multiple IGC files
 
 Install all required librairies
 
-```pip -r requirements.txt```
+```pip install -r requirements.txt```
 
 ## Usage
 
