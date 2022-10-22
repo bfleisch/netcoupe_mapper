@@ -10,123 +10,23 @@
    crossorigin=""></script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<link rel="stylesheet" href="styles.css"/>
 </head>
 
 
 <body>   
  
-<div id="map" style="height: 1024px; border: 1px solid #AAA;"></div>
- 
-<script>
-
-var DEV=true
- 
-var map = L.map('map').setView([ 45.540963,  4.666802], 6);
-var traces_style = {
-    // "color": "#050067",
-        "color": "darkblue",
-    "weight": 3,
-    "opacity": 0.35
-};
-
-var traces_style_clicked = {
-    "color": "red",
-    "weight": 4,
-    "opacity":1
-};
-
-
-var tilelayer=undefined
-
-if (DEV==false) {
-
-    tilelayer =  L.tileLayer('https://tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token={accessToken}', {
-	attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	minZoom: 0,
-	maxZoom: 22,
-	subdomains: 'abcd',
-	accessToken: 'XXXX' });
-} else
-{ 
-    tilelayer = L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    subdomains: ['a','b','c']});
-}
-
-
-tilelayer.addTo(map)
-
-
-
-
-</script>
-
-
-<script>
-
-var clicked_layer = undefined
-
-function whenClicked(e) {
-  map.fitBounds(e.target.getBounds());
-  var layer = e.target;
-  if (layer.red !==undefined & layer.red==true) {
-      layer.setStyle(traces_style);
-      layer.red = false
-  } else {
-      if (clicked_layer !==undefined) { 
-          clicked_layer.setStyle (traces_style);
-          clicked_layer.red=false;
-      } 
-      layer.setStyle(traces_style_clicked); 
-      layer.red=true
-  }
-  
-  clicked_layer = layer
-
-}
-
-
-function onEachFeature(feature, layer) {
-    layer.on({
-        click: whenClicked
-    });
-}
-
-/*
-
-$.getJSON("traces.geojson", function(data){
- var dataLayer = L.geoJson(data, 
- { 
-     style: traces_style,
-     onEachFeature: onEachFeature
- });
- 
-  dataLayer.addTo(map)
-  }
-);
-
-*/
-
-data_b64 = '##GEOJSON##'
-data = JSON.parse(atob(data_b64))
-var dataLayer = L.geoJson(data, 
- { 
-     style: traces_style,
-     onEachFeature: onEachFeature
- });
-
-dataLayer.addTo(map)
-map.fitBounds( dataLayer.getBounds())
-
-
-</script>
+<div id="map" style="z-index: 0;  height:100%; position: relative; border: 1px solid #AAA;"></div>
+<div id="choix_annee_container"> </div>
+<script src="utils-compiled.js"></script>
 
 
 
 
 
- 
  </body>
  
  

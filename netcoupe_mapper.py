@@ -10,13 +10,10 @@ import numpy as np
 
 from datetime import datetime
 from geojson import LineString, FeatureCollection
-import re, base64, json
+import re, json
 import glob
 
 
-
-MAP_TEMPLATE_FILE='web/map.template.html'
-MAP_FILE='web/map.html'
 IGC_SAMPLE_FREQ ='30S'
 
 # ----------------------------------------------------------
@@ -97,11 +94,11 @@ import sys,os
 
 def main(argv):
     
-    if len (argv) < 2:
-        print ("Usage: {} DOSSIER_IGC ".format(argv[0]))
+    if len (argv) < 3:
+        print ("Usage: {} DOSSIER_IGC JSON_FILE".format(argv[0]))
         return 0
     
-    root_dir = argv[1]
+    root_dir,json_file = argv[1], argv[2]
     
     if not os.path.exists (root_dir):
         print ("le dossier '{}' n'existe pas".format(root_dir))
@@ -112,20 +109,10 @@ def main(argv):
     if len(feature_collection.features) < 1:
         print ("Aucune trace trouvée.")
         return 1
-    
-    with open (MAP_TEMPLATE_FILE,'r') as f:
-        template_html = ''.join(f.readlines())
         
-        
-    html_content = re.sub ('##GEOJSON##', base64.b64encode(
-            json.dumps (feature_collection).encode('utf-8')).decode('utf-8'), template_html)
-    
-    
-    with open (MAP_FILE, 'w') as f:
-        f.write (html_content)
-        f.close()
-    
-    print ("Fichier '{}' crée.".format(MAP_FILE))
+    with open(json_file, "wb") as f:
+        f.write (json.dumps (feature_collection).encode('utf-8'))
+
     return 0
     
 if __name__ == "__main__":
