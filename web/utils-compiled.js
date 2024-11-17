@@ -7,6 +7,14 @@ const traces = [{
 }, {
   label: '2022',
   value: 'traces_2022.json'
+}, 
+{
+  label: '2023',
+  value: 'traces_2023.json'
+},
+{
+  label: '2024',
+  value: 'traces_2024.json'
 }];
 var curr_trace;
 class AnneeSelect extends React.Component {

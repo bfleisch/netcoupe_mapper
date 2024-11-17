@@ -1,3 +1,5 @@
 IGC/
 urls.txt
 .env
+.venv/
+web/traces_*
