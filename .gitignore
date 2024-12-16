@@ -2,4 +2,9 @@ IGC/
 urls.txt
 .env
 .venv/
-web/traces_*
+web/traces/
+web/node_modules/*
+web/dist
+web/__old/
+public/
+dist/
