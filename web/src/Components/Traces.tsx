@@ -4,8 +4,6 @@ import { useEffect, useRef } from "react"
 import {   useMap } from "react-leaflet"
 import {  GeoJSON } from "react-leaflet"
 import L from 'leaflet';
-import { Feature, Geometry } from "geojson"
-import { LeafletEvent } from "leaflet";
 
 
 interface TracesProps  {
@@ -16,8 +14,6 @@ export function Traces (props:TracesProps) {
 
     const map = useMap()
     const data = props.data
-    var click_feature: Feature<Geometry, any>;
-
     const geoJsonRef = useRef<L.GeoJSON | null>(null)
 
     useEffect ( () => {
@@ -46,35 +42,31 @@ export function Traces (props:TracesProps) {
         "opacity":1
     };
 
-        
-    function whenClicked(e: LeafletEvent)  {
+    let lastClickedLayer: L.Path | null = null;
 
-        if (!e.target) return; 
-        var feature = (e.target) as Feature
+    function onEachFeature(_: GeoJSON.Feature, layer: L.Layer) {
+        layer.on ( 'click', () => {// Reset the last clicked layer to its default style
 
-        map.fitBounds(e.target.getBounds());
-
-        if (feature == click_feature) {
-            click_feature.setStyle (traces_style);
-        } else {
-            if (click_feature) {
-                click_feature.setStyle (traces_style);
+            if (layer instanceof L.Path){ 
+                if (lastClickedLayer) {
+                    lastClickedLayer.setStyle(traces_style);
+                  }
+      
+                  // Apply the clicked style to the current feature
+                  layer.setStyle(traces_style_clicked)
+                  layer.bringToFront()
+                  if (layer instanceof L.Polyline)
+                    map.fitBounds(layer.getBounds());
+      
+                  // Update the last clicked layer reference
+                  lastClickedLayer = layer              
             }
-            feature.setStyle(traces_style_clicked); 
-        }
-        click_feature = feature
+        })
     }
-
-    function onEachFeature(feature: Feature, layer: L.Layer) {
-        layer.addEventListener ("click", whenClicked, feature)
-    }
-
-
 
     return <GeoJSON 
         data={data}  
         ref ={geoJsonRef} key={Math.random()} 
         onEachFeature={onEachFeature}    
    />
-
 }

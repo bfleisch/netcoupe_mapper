@@ -9,12 +9,13 @@ export function Map() {
 
     const [traceItems, setTraceItems] =  useState<TraceItemInterface[]>([])
     const [ curTraceItem, setCurTraceItem] = useState<TraceItemInterface>()
-    const position: LatLngTuple = [51.505, -0.09,]
+    const position: LatLngTuple = [45.6556928,4.9049444,17] // CVVL à CORBAS! 
     const [traces, setTraces] = useState<TraceItemInterface> ()
 
+    const API_ROOT = import.meta.env.DEV ? "http://localhost:8080/" : ""
 
     const fetchList :  () => Promise<TraceItemInterface[]> = async function () {
-        var r = await fetch ("http://localhost:8080/list.php")
+        var r = await fetch (API_ROOT + "list.php")
         if (r.ok) 
             return (await r.json()) as TraceItemInterface[]
         console.log (r.statusText)
@@ -22,7 +23,7 @@ export function Map() {
     }
 
     const getTrace : (item:TraceItemInterface ) =>  Promise<any> = async function (item) {
-        var r = await fetch ("http://localhost:8080/get.php?filename=" + item.filename)
+        var r = await fetch (API_ROOT + "get.php?filename=" + item.filename)
         if (r.ok)
             return await r.json();
         console.log (r)
@@ -55,7 +56,7 @@ export function Map() {
         setCurTraceItem (item)
     }
 
-    return (<>        <MapContainer center={position} zoom={14} scrollWheelZoom={true}>
+    return (<>        <MapContainer center={position} zoom={6} scrollWheelZoom={true}>
             <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
